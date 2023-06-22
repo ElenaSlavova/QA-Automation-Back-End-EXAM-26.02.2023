@@ -1,0 +1,234 @@
+{
+	"info": {
+		"_postman_id": "6e043246-0f65-4e98-9ea2-64ab446fa1d0",
+		"name": "Contact Book",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25595164"
+	},
+	"item": [
+		{
+			"name": "List All Contacts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Check if Json\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://contactbook.slavova1.repl.co/api/contacts",
+					"protocol": "https",
+					"host": [
+						"contactbook",
+						"slavova1",
+						"repl",
+						"co"
+					],
+					"path": [
+						"api",
+						"contacts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Contact",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"    pm.test(\"Status code is 201 or 202\", function () {\r",
+							"pm.expect(pm.response.code).to.be.oneOf([201,202]);\r",
+							"    const body = pm.response.json();\r",
+							"    pm.environment.set(\"contactId\",body.contact.id);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"Marie\",\r\n    \"lastName\": \"Curie\",\r\n    \"email\": \"marie67@gmail.com\",\r\n    \"phone\": \"+1 800 200 300\",\r\n    \"comments\": \"Old friend\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://contactbook.slavova1.repl.co/api/contacts",
+					"protocol": "https",
+					"host": [
+						"contactbook",
+						"slavova1",
+						"repl",
+						"co"
+					],
+					"path": [
+						"api",
+						"contacts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Contact By Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"EDITED Marie\",\r\n    \"lastName\": \"EDITED Curie\"\r\n  \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://contactbook.slavova1.repl.co/api/contacts/{{contactId}}",
+					"protocol": "https",
+					"host": [
+						"contactbook",
+						"slavova1",
+						"repl",
+						"co"
+					],
+					"path": [
+						"api",
+						"contacts",
+						"{{contactId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Contact By Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check if the task can be deleted\", function () {\r",
+							"    const body = pm.response.json();\r",
+							"    pm.expect(body.msg).to.be.equal(\"Contact deleted: \"+ pm.environment.get(\"contactId\"));\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://contactbook.slavova1.repl.co/api/contacts/{{contactId}}",
+					"protocol": "https",
+					"host": [
+						"contactbook",
+						"slavova1",
+						"repl",
+						"co"
+					],
+					"path": [
+						"api",
+						"contacts",
+						"{{contactId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search By Keyword",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check if Last Name is correct\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    const body = pm.response.json();\r",
+							"    \r",
+							"  for(let item of body){\r",
+							"     \r",
+							"     pm.expect(item.lastName, \"Issue number property\").to.be.equal(\"Jackson\");}\r",
+							"\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://contactbook.slavova1.repl.co/api/contacts/search/Michael",
+					"protocol": "https",
+					"host": [
+						"contactbook",
+						"slavova1",
+						"repl",
+						"co"
+					],
+					"path": [
+						"api",
+						"contacts",
+						"search",
+						"Michael"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
